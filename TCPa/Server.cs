@@ -10,7 +10,7 @@ using System.Windows.Forms;
 using System.Net;
 using System.Net.Sockets;
 using System.IO;
-
+using System.Threading;
 
 namespace TCPa
 {   // skapar en lista med tcp clients 
@@ -23,7 +23,7 @@ namespace TCPa
         TcpClient klient = null;
         //Skapar listan "klientLista" med TcpClient som datatyp
         List<TcpClient> klientLista = new List<TcpClient>();
-
+        
         //Skapar en tom variabel, lyssnare, med TcpListener som datatyp
         TcpListener lyssnare;
         int port = 0;
@@ -31,6 +31,7 @@ namespace TCPa
         public Server()
         {
             InitializeComponent();
+            lblA.Text = "0";
         }
         private void btnTaEmot_Click(object sender, EventArgs e)
         {
@@ -62,7 +63,8 @@ namespace TCPa
             }
 
         }
-        //Metoden nedan tar emot en parameter, int, som bifogas av anropning av eventet ovan
+        // Metoden nedan tar emot en parameter, int, som bifogas av anropning av eventet ovan
+        // Avlyssnar måltavlans kommmunikation
         public void StartListening(int portT)
         {
             //När inmatningen av portnumret är korrekt så ska både..
@@ -84,6 +86,7 @@ namespace TCPa
             //(söker efter fel)
             catch (Exception error)
             {
+                MessageBox.Show("HALLOW KAN INTE9");
                 MessageBox.Show(error.Message, Text);
                 return;
             }
@@ -102,59 +105,70 @@ namespace TCPa
                 klient = await lyssnare.AcceptTcpClientAsync();
                 //Lägg till en klient i listan
                 klientLista.Add(klient);
+                
+                lblA.Text = klientLista.Count.ToString();
             }
             //Om inte kodblocket ovan exekveras ordentligt så körs nedanstående kodblock. 
             catch (Exception error)
-            {   
+            {
+                MessageBox.Show("HALLOW KAN INTE8");
                 //Meddelande med errortext skrivs ut
                 MessageBox.Show(error.Message, Text);
                 //med return hoppar avläsningen ut från kodblocket
                 return;
             }
             //Anropar metoden StartReading med referensvariabeln "klient"
-            StartReading(klient);
+           Task task = StartReading(klient);
             StartAccepting();
         }
         //Startreading metoden fångar klientvariabeln med parametern "k"
-        public async void StartReading(TcpClient k)
+        public async Task StartReading(TcpClient k)
         {
-            //Buffervariabeln sparar information som kan maximalt hantera 1024 bytes.  
-            byte[] buffer = new byte[1024];
-            //variabeln "n" tilldelas värdet 0
-            int n = 0;
-            //Testa exekvera
-            try
-            {
-                //variabeln n tar emot textstringen som har avlästs från meddelandefältet
-                //Delarna utanför detta block kommer inte att köras förens n tilldelas ett värde mellan 0-1024.
-                //Om inget meddelande tas emot som kommer metoden "startAccepting" att köras. Samtidigt kommer 
-                //kodraden nedan invänta ett svar på inkommande meddelande i bakgrunden. Såfort ett meddelande
-                //Inkommer så kommer raden nedan återupptas.
-                n = await k.GetStream().ReadAsync(buffer, 0, 1024); 
-                
-            }
-            //Vilken IP
-            catch (Exception error)
-            {
-                MessageBox.Show(error.Message, Text);
-                return;
-            }
-            //Nedanstående anrop görs för att servern ska kunna skicka vidare sträng till de resterande 
-            //Uppkopplade klienter. Startsending metoden anropas med klienten, "k", och utskriften som argument
-            StartSending(k, Encoding.Unicode.GetString(buffer, 0, n));
-            //Samma meddelande som skickas till andra klienter genom servern (anropet ovan), skrivs även ut
-            //i serverns meddelandelogg.
-            tbxLogg.AppendText(Encoding.Unicode.GetString(buffer, 0, n));
+            await Task.Delay(500);
+                //Buffervariabeln sparar information som kan maximalt hantera 1024 bytes.  
+                byte[] buffer = new byte[1024];
+                //variabeln "n" tilldelas värdet 0
+                int n = 0;
+                //Testa exekvera
+                try
+                {
+                    //variabeln n tar emot textstringen som har avlästs från meddelandefältet
+                    //Delarna utanför detta block kommer inte att köras förens n tilldelas ett värde mellan 0-1024.
+                    //Om inget meddelande tas emot som kommer metoden "startAccepting" att köras. Samtidigt kommer 
+                    //kodraden nedan invänta ett svar på inkommande meddelande i bakgrunden. Såfort ett meddelande
+                    //Inkommer så kommer raden nedan återupptas.
+
+
+                    n = await k.GetStream().ReadAsync(buffer, 0, 1024);
+
+
+                }
+                //Vilken IP
+                catch (Exception error)
+                {
+                    return;
+                }
+                //Nedanstående anrop görs för att servern ska kunna skicka vidare sträng till de resterande 
+                //Uppkopplade klienter. Startsending metoden anropas med klienten, "k", och utskriften som argument
+                StartSending(k, Encoding.Unicode.GetString(buffer, 0, n));
+                //Samma meddelande som skickas till andra klienter genom servern (anropet ovan), skrivs även ut
+                //i serverns meddelandelogg.
+                tbxLogg.AppendText(Encoding.Unicode.GetString(buffer, 0, n));
+
+                //Efter anropet har gjorts på startsending loopas startreading funktionen.
+                StartReading(k);
             
-            //Efter anropet har gjorts på startsending loopas startreading funktionen.
-            StartReading(k);
+                
+               
+            
+            
         }
         //Metoden nedan tar emot klienten, "k", som argument med variabeln "klientSomSkickar",
         //Samt meddelandet som ska, genom servern, skickas vidare till andra uppkopplade klienter 
         public async void StartSending(TcpClient klientSomSkickar, string message)
         {
             //Om det finns mer än 1 användare i listan...
-            if (klientLista.Count > 0)
+            if (klientLista.Count >= 0)
             {
                 //Skickar ut meddelandet som är infogad i variabeln "string message" 
                 byte[] utData = Encoding.Unicode.GetBytes(message);
@@ -163,15 +177,18 @@ namespace TCPa
                 {
                     try
                     {   //Om klienten som har valts i listan INTE är en själv/den som skickade
-                        if (klient != klientSomSkickar)
+                        if (klient != klientSomSkickar && klient.Connected)
                         {
+                            
                             //Väntar tills den får kod och skriver 
                             await klient.GetStream().WriteAsync(utData, 0, utData.Length);
-
+                            
                         }
                     }
                     catch (Exception error)
                     {
+                        MessageBox.Show("HALLOW KAN INTE6");
+                        
                         MessageBox.Show(error.Message, Text); return;
                     }
                 }
@@ -186,5 +203,7 @@ namespace TCPa
                 klient.Close();
             }
         }
+        
+        
     }
 }

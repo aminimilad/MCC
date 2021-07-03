@@ -18,13 +18,15 @@ namespace Klient
         TcpClient klient = new TcpClient();
         //Yomma variabler
         int port;
+        string namn;
+        string tid;
         IPAddress adress;
-
         public Klient()
         {
             InitializeComponent();
             //Skickaknappen är avstängd för att inte orsaka fel
             btnSend.Enabled = false;
+            
         }
         private void btnAnslut_Click(object sender, EventArgs e)
         {
@@ -60,6 +62,7 @@ namespace Klient
             }
             catch (Exception error)
             {
+                MessageBox.Show("HALLOW KAN INTE5");
                 MessageBox.Show(error.Message, Text);
                 return;
             }
@@ -70,6 +73,28 @@ namespace Klient
                 btnAnslut.Enabled = false;
                 btnSend.Enabled = true;
                 tbxNmn.Enabled = false;
+                namn = tbxNmn.Text;
+                //Tid
+                tid = DateTime.Now.ToString("HH:mm tt");
+
+                byte[] utData = Encoding.Unicode.GetBytes(namn + " " + "anslöt sig till rummet" + " " + tid + "\r\n");
+                try
+                {
+                    //Testa appenda/lägg till denna text som en utdata till andra klienter
+                    tbxLogg.AppendText(namn + " " + "anslöt sig till rummet" + " " + tid + "\r\n");
+
+                    //Inväntar med att skicka ström. Andra delar i metoden körs ej,
+                    //dock utanför metoden pågår processen, utan att datorn kraschar
+                    await klient.GetStream().WriteAsync(utData, 0, utData.Length);
+
+                }
+                catch (Exception error)
+                {
+                    MessageBox.Show("HALLOW KAN INTE4");
+                    MessageBox.Show(error.Message, Text);
+                    return;
+                }
+
                 tbxMedd.Focus();
             }
             //Avlyssnar
@@ -81,10 +106,9 @@ namespace Klient
             if (klient.Connected)
             {
                 //Läs av namnet
-                string namn = tbxNmn.Text;
+                namn = tbxNmn.Text;
                 //Tid
-                string tid = DateTime.Now.ToString("HH:mm tt");
-
+                tid = DateTime.Now.ToString("HH:mm tt");
                 //Om meddelandefältet är tomt..
                 if (String.IsNullOrEmpty(tbxMedd.Text) || String.IsNullOrWhiteSpace(tbxMedd.Text))
                 {
@@ -107,7 +131,9 @@ namespace Klient
                     }
                     catch (Exception error)
                     {
+                        MessageBox.Show("HALLOW KAN INTE");
                         MessageBox.Show(error.Message, Text);
+                        
                         return;
                     }
                 }
@@ -125,10 +151,11 @@ namespace Klient
             {
               // Andra delen i metoden kommer inte köras tills buffern fått ett värde mellan 0-1024
                 n = await k.GetStream().ReadAsync(buffer, 0, 1024); 
-               
+                
             }
             catch (Exception error)
             {
+                MessageBox.Show("HALLOW KAN INTE2" + k.Connected);
                 MessageBox.Show(error.Message, Text);
                 return;
             }
@@ -139,10 +166,38 @@ namespace Klient
             StartReading(k);
         }
         private void Klient_FormClosing(object sender, FormClosingEventArgs e)
-        {
+            {
+            //Läs av namnet
+             namn = tbxNmn.Text;
+             //Tid
+             tid = DateTime.Now.ToString("HH:mm tt");
+
+             if (klient.Connected & klient!=null) {
+                 byte[] utData = Encoding.Unicode.GetBytes(namn + " " + "lämnade rummet" + " " + tid + "\r\n");
+                 try
+                 {
+
+                     //Inväntar med att skicka ström. Andra delar i metoden körs ej,
+                     //dock utanför metoden pågår processen, utan att datorn kraschar
+                      klient.GetStream().Write(utData, 0, utData.Length);
+
+                 }
+                 catch (Exception error)
+                 {
+                     MessageBox.Show("HALLOW KAN INTE3");
+                     return;
+                 }
+             }
+
+           
+
             //Stänger av klient
+            
             if (klient != null)
                 klient.Close();
+            
+
+
         }
     }
 }

@@ -23,11 +23,11 @@ namespace TCPa
         TcpClient klient = null;
         //Skapar listan "klientLista" med TcpClient som datatyp
         List<TcpClient> klientLista = new List<TcpClient>();
-        
+        Dictionary<int, TcpClient> KHM = new Dictionary<int, TcpClient>();
         //Skapar en tom variabel, lyssnare, med TcpListener som datatyp
         TcpListener lyssnare;
         int port = 0;
-
+        int size = 0;
         public Server()
         {
             InitializeComponent();
@@ -104,9 +104,12 @@ namespace TCPa
                 //samt invänta meddelande utan att behöva krascha. 
                 klient = await lyssnare.AcceptTcpClientAsync();
                 //Lägg till en klient i listan
-                klientLista.Add(klient);
-                
-                lblA.Text = klientLista.Count.ToString();
+
+               // klientLista.Add(klient); // SUDD
+                KHM[size] = klient;
+                size++;
+                //lblA.Text = klientLista.Count.ToString();
+                lblA.Text = KHM.Count.ToString();
             }
             //Om inte kodblocket ovan exekveras ordentligt så körs nedanstående kodblock. 
             catch (Exception error)
@@ -132,20 +135,19 @@ namespace TCPa
                 //Testa exekvera
                 try
                 {
-                    //variabeln n tar emot textstringen som har avlästs från meddelandefältet
-                    //Delarna utanför detta block kommer inte att köras förens n tilldelas ett värde mellan 0-1024.
-                    //Om inget meddelande tas emot som kommer metoden "startAccepting" att köras. Samtidigt kommer 
-                    //kodraden nedan invänta ett svar på inkommande meddelande i bakgrunden. Såfort ett meddelande
-                    //Inkommer så kommer raden nedan återupptas.
-
-
-                    n = await k.GetStream().ReadAsync(buffer, 0, 1024);
-
+                //variabeln n tar emot textstringen som har avlästs från meddelandefältet
+                //Delarna utanför detta block kommer inte att köras förens n tilldelas ett värde mellan 0-1024.
+                //Om inget meddelande tas emot som kommer metoden "startAccepting" att köras. Samtidigt kommer 
+                //kodraden nedan invänta ett svar på inkommande meddelande i bakgrunden. Såfort ett meddelande
+                //Inkommer så kommer raden nedan återupptas.
+                
+                n = await k.GetStream().ReadAsync(buffer, 0, 1024);
 
                 }
                 //Vilken IP
                 catch (Exception error)
                 {
+                   
                     return;
                 }
                 //Nedanstående anrop görs för att servern ska kunna skicka vidare sträng till de resterande 
@@ -156,11 +158,7 @@ namespace TCPa
                 tbxLogg.AppendText(Encoding.Unicode.GetString(buffer, 0, n));
 
                 //Efter anropet har gjorts på startsending loopas startreading funktionen.
-                StartReading(k);
-            
-                
-               
-            
+               await StartReading(k);
             
         }
         //Metoden nedan tar emot klienten, "k", som argument med variabeln "klientSomSkickar",
@@ -168,12 +166,13 @@ namespace TCPa
         public async void StartSending(TcpClient klientSomSkickar, string message)
         {
             //Om det finns mer än 1 användare i listan...
-            if (klientLista.Count >= 0)
+            /*if (klientLista.Count > 0)
             {
                 //Skickar ut meddelandet som är infogad i variabeln "string message" 
                 byte[] utData = Encoding.Unicode.GetBytes(message);
                 //För varje användare som finns i listan så ska meddelandet skickas till
-                foreach (TcpClient klient in klientLista)
+              
+               foreach (TcpClient klient in klientLista)
                 {
                     try
                     {   //Om klienten som har valts i listan INTE är en själv/den som skickade
@@ -183,6 +182,16 @@ namespace TCPa
                             //Väntar tills den får kod och skriver 
                             await klient.GetStream().WriteAsync(utData, 0, utData.Length);
                             
+
+                        }
+                        else if (!klient.Connected)
+                        {
+                            
+                            
+                                    size++;
+                            klient.Close();
+                            lblA.Text = (klientLista.Count - size).ToString();
+
                         }
                     }
                     catch (Exception error)
@@ -193,6 +202,89 @@ namespace TCPa
                     }
                 }
             }
+            */
+
+
+
+            if (KHM.Count > 0)
+            {
+                //Skickar ut meddelandet som är infogad i variabeln "string message" 
+                byte[] utData = Encoding.Unicode.GetBytes(message);
+                //För varje användare som finns i listan så ska meddelandet skickas till
+                
+                for(int i = 0; i < size; i++)
+                {
+                   
+                    await Oopdaten();
+
+
+                    try //
+                    {   //Om klienten som har valts i listan INTE är en själv/den som skickade
+                        if (KHM.ContainsKey(i))
+                        {
+                            if (KHM[i] != klientSomSkickar && KHM[i].Connected)
+                            {
+                                //Väntar tills den får kod och skriver 
+                                await KHM[i].GetStream().WriteAsync(utData, 0, utData.Length);
+                                
+                            }
+                            else if (!KHM[i].Connected)
+                            {
+                                KHM.Remove(i);
+                                
+                            }
+
+                       }
+                        
+
+                    }
+                    catch (Exception error)
+                    {
+                        MessageBox.Show("HALLOW KAN INTE6");
+
+                        MessageBox.Show(error.Message, Text); return;
+                    }
+                }
+                
+                
+
+               /* foreach (KeyValuePair<int, TcpClient> klient in KHM.ToList())
+                {
+                    
+                    try //
+                    {   //Om klienten som har valts i listan INTE är en själv/den som skickade
+                        if (klient.Value != klientSomSkickar && klient.Value.Connected)
+                        {
+
+                            //Väntar tills den får kod och skriver 
+                            await klient.Value.GetStream().WriteAsync(utData, 0, utData.Length);
+
+
+                        }
+                        
+                            if (!klient.Value.Connected)
+                            {
+                                KHM.Remove(klient.Key);
+                                lblA.Text = KHM.Count.ToString();
+                            }
+                        
+                        
+                    }
+                    catch (Exception error)
+                    {
+                        MessageBox.Show("HALLOW KAN INTE6");
+
+                        MessageBox.Show(error.Message, Text); return;
+                    }
+                }*/
+            }
+
+
+        }
+
+        async Task Oopdaten()
+        {
+            lblA.Text = KHM.Count.ToString();
         }
         //Sätts igång när servern stängs av
         private void Server_FormClosing(object sender, FormClosingEventArgs e)

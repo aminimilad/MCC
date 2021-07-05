@@ -172,7 +172,7 @@ namespace Klient
              //Tid
              tid = DateTime.Now.ToString("HH:mm tt");
 
-             if (klient.Connected & klient!=null) {
+             if (klient.Connected && klient!=null) {
                  byte[] utData = Encoding.Unicode.GetBytes(namn + " " + "lämnade rummet" + " " + tid + "\r\n");
                  try
                  {
@@ -187,14 +187,16 @@ namespace Klient
                      MessageBox.Show("HALLOW KAN INTE3");
                      return;
                  }
-             }
+                //Stänger av klient
+                if (klient != null)
+                    klient.Close();
+            }
 
            
 
-            //Stänger av klient
             
-            if (klient != null)
-                klient.Close();
+            
+            
             
 
 

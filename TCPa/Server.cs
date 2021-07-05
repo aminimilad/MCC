@@ -140,14 +140,20 @@ namespace TCPa
                 //Om inget meddelande tas emot som kommer metoden "startAccepting" att köras. Samtidigt kommer 
                 //kodraden nedan invänta ett svar på inkommande meddelande i bakgrunden. Såfort ett meddelande
                 //Inkommer så kommer raden nedan återupptas.
-                
-                n = await k.GetStream().ReadAsync(buffer, 0, 1024);
+                if (k.Connected && k!= null)
+                {
+                    n = await k.GetStream().ReadAsync(buffer, 0, 1024);
+                }
+                else
+                {
+                    k.Close();
+                }
 
                 }
                 //Vilken IP
                 catch (Exception error)
                 {
-                   
+                    MessageBox.Show(error.Message);
                     return;
                 }
                 //Nedanstående anrop görs för att servern ska kunna skicka vidare sträng till de resterande 
@@ -157,6 +163,9 @@ namespace TCPa
                 //i serverns meddelandelogg.
                 tbxLogg.AppendText(Encoding.Unicode.GetString(buffer, 0, n));
 
+                //Test connection 
+
+
                 //Efter anropet har gjorts på startsending loopas startreading funktionen.
                await StartReading(k);
             
@@ -165,47 +174,6 @@ namespace TCPa
         //Samt meddelandet som ska, genom servern, skickas vidare till andra uppkopplade klienter 
         public async void StartSending(TcpClient klientSomSkickar, string message)
         {
-            //Om det finns mer än 1 användare i listan...
-            /*if (klientLista.Count > 0)
-            {
-                //Skickar ut meddelandet som är infogad i variabeln "string message" 
-                byte[] utData = Encoding.Unicode.GetBytes(message);
-                //För varje användare som finns i listan så ska meddelandet skickas till
-              
-               foreach (TcpClient klient in klientLista)
-                {
-                    try
-                    {   //Om klienten som har valts i listan INTE är en själv/den som skickade
-                        if (klient != klientSomSkickar && klient.Connected)
-                        {
-                            
-                            //Väntar tills den får kod och skriver 
-                            await klient.GetStream().WriteAsync(utData, 0, utData.Length);
-                            
-
-                        }
-                        else if (!klient.Connected)
-                        {
-                            
-                            
-                                    size++;
-                            klient.Close();
-                            lblA.Text = (klientLista.Count - size).ToString();
-
-                        }
-                    }
-                    catch (Exception error)
-                    {
-                        MessageBox.Show("HALLOW KAN INTE6");
-                        
-                        MessageBox.Show(error.Message, Text); return;
-                    }
-                }
-            }
-            */
-
-
-
             if (KHM.Count > 0)
             {
                 //Skickar ut meddelandet som är infogad i variabeln "string message" 
@@ -215,9 +183,6 @@ namespace TCPa
                 for(int i = 0; i < size; i++)
                 {
                    
-                    await Oopdaten();
-
-
                     try //
                     {   //Om klienten som har valts i listan INTE är en själv/den som skickade
                         if (KHM.ContainsKey(i))
@@ -231,7 +196,7 @@ namespace TCPa
                             else if (!KHM[i].Connected)
                             {
                                 KHM.Remove(i);
-                                
+                                lblA.Text = KHM.Count.ToString();
                             }
 
                        }
@@ -242,50 +207,14 @@ namespace TCPa
                     {
                         MessageBox.Show("HALLOW KAN INTE6");
 
-                        MessageBox.Show(error.Message, Text); return;
+                        MessageBox.Show(error.Message, Text); 
+                        return;
                     }
                 }
-                
-                
-
-               /* foreach (KeyValuePair<int, TcpClient> klient in KHM.ToList())
-                {
-                    
-                    try //
-                    {   //Om klienten som har valts i listan INTE är en själv/den som skickade
-                        if (klient.Value != klientSomSkickar && klient.Value.Connected)
-                        {
-
-                            //Väntar tills den får kod och skriver 
-                            await klient.Value.GetStream().WriteAsync(utData, 0, utData.Length);
-
-
-                        }
-                        
-                            if (!klient.Value.Connected)
-                            {
-                                KHM.Remove(klient.Key);
-                                lblA.Text = KHM.Count.ToString();
-                            }
-                        
-                        
-                    }
-                    catch (Exception error)
-                    {
-                        MessageBox.Show("HALLOW KAN INTE6");
-
-                        MessageBox.Show(error.Message, Text); return;
-                    }
-                }*/
             }
-
-
         }
 
-        async Task Oopdaten()
-        {
-            lblA.Text = KHM.Count.ToString();
-        }
+        
         //Sätts igång när servern stängs av
         private void Server_FormClosing(object sender, FormClosingEventArgs e)
         {

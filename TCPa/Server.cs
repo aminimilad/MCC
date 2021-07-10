@@ -88,7 +88,6 @@ namespace TCPa
             //(söker efter fel)
             catch (Exception error)
             {
-                MessageBox.Show("HALLOW KAN INTE9");
                 MessageBox.Show(error.Message, Text);
                 return;
             }
@@ -116,7 +115,6 @@ namespace TCPa
             //Om inte kodblocket ovan exekveras ordentligt så körs nedanstående kodblock. 
             catch (Exception error)
             {
-                MessageBox.Show("HALLOW KAN INTE8");
                 //Meddelande med errortext skrivs ut
                 MessageBox.Show(error.Message, Text);
                 //med return hoppar avläsningen ut från kodblocket
@@ -157,8 +155,7 @@ namespace TCPa
                 //Vilken IP
                 catch (Exception error)
                 {
-
-                MessageBox.Show("AAAAAAAAAA");
+                    MessageBox.Show(error.Message);
                 }
             //Nedanstående anrop görs för att servern ska kunna skicka vidare sträng till de resterande 
             //Uppkopplade klienter. Startsending metoden anropas med klienten, "k", och utskriften som argument

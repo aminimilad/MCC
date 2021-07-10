@@ -184,7 +184,7 @@ namespace Klient
                  }
                  catch (Exception error)
                  {
-                     MessageBox.Show("HALLOW KAN INTE3");
+                     MessageBox.Show(error.Message);
                      return;
                  }
                 //Stänger av klient

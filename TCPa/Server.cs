@@ -1,17 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Net;
 using System.Net.Sockets;
-using System.IO;
-using System.Threading;
-using System.Diagnostics;
 
 namespace TCPa
 {   // skapar en lista med tcp clients 
@@ -66,7 +59,7 @@ namespace TCPa
 
         }
         // Metoden nedan tar emot en parameter, int, som bifogas av anropning av eventet ovan
-        
+
         public void StartListening(int portT)
         {
             //När inmatningen av portnumret är korrekt så ska både..
@@ -106,7 +99,7 @@ namespace TCPa
                 klient = await lyssnare.AcceptTcpClientAsync();
                 //Lägg till en klient i listan
 
-               // klientLista.Add(klient); // SUDD
+                // klientLista.Add(klient); // SUDD
                 KHM[size] = klient;
                 size++;
                 //lblA.Text = klientLista.Count.ToString();
@@ -120,7 +113,7 @@ namespace TCPa
                 //med return hoppar avläsningen ut från kodblocket
                 return;
             }
-            
+
             //Anropar metoden StartReading med referensvariabeln "klient"
             Task task = StartReading(klient);
             StartAccepting();
@@ -129,52 +122,42 @@ namespace TCPa
         public async Task StartReading(TcpClient k)
         {
             await Task.Delay(50);
-                //Buffervariabeln sparar information som kan maximalt hantera 1024 bytes.  
-                byte[] buffer = new byte[1024];
+            //Buffervariabeln sparar information som kan maximalt hantera 1024 bytes.  
+            byte[] buffer = new byte[1024];
             //variabeln "n" tilldelas värdet 0
             int p = 0;
             //Testa exekvera
             //PING
-            
+
             try
-                {
+            {
                 //variabeln n tar emot textstringen som har avlästs från meddelandefältet
                 //Delarna utanför detta block kommer inte att köras förens n tilldelas ett värde mellan 0-1024.
                 //Om inget meddelande tas emot som kommer metoden "startAccepting" att köras. Samtidigt kommer 
                 //kodraden nedan invänta ett svar på inkommande meddelande i bakgrunden. Såfort ett meddelande
                 //Inkommer så kommer raden nedan återupptas.
-                    if (k.Connected)
-                    {
-
-                        p = await Task.Run(() => GetVAsync(k, buffer));
-                        
-                    }
-                    
-
-                }
-                //Vilken IP
-                catch (Exception error)
+                if (k.Connected)
                 {
-                    MessageBox.Show(error.Message);
+                    p = await Task.Run(() => GetVAsync(k, buffer));
                 }
+
+            }
+            //Vilken IP
+            catch (Exception error)
+            {
+                MessageBox.Show(error.Message);
+            }
             //Nedanstående anrop görs för att servern ska kunna skicka vidare sträng till de resterande 
             //Uppkopplade klienter. Startsending metoden anropas med klienten, "k", och utskriften som argument
-            
-            
-                StartSending(k, Encoding.Unicode.GetString(buffer, 0, p));
-                //Samma meddelande som skickas till andra klienter genom servern (anropet ovan), skrivs även ut
-                //i serverns meddelandelogg.
-                tbxLogg.AppendText(Encoding.Unicode.GetString(buffer, 0, p));
 
-                //Test connection 
-
-            
-
-
+            StartSending(k, Encoding.Unicode.GetString(buffer, 0, p));
+            //Samma meddelande som skickas till andra klienter genom servern (anropet ovan), skrivs även ut
+            //i serverns meddelandelogg.
+            tbxLogg.AppendText(Encoding.Unicode.GetString(buffer, 0, p));
 
             //Efter anropet har gjorts på startsending loopas startreading funktionen.
             StartReading(k).RunSynchronously();
-            
+
         }
         //Metoden nedan tar emot klienten, "k", som argument med variabeln "klientSomSkickar",
         //Samt meddelandet som ska, genom servern, skickas vidare till andra uppkopplade klienter 
@@ -185,20 +168,15 @@ namespace TCPa
             int n = 0;
             if (k.Connected)
             {
-                
+
                 NetworkStream c = k.GetStream();
-                while(c.DataAvailable)
+                while (c.DataAvailable)
                 {
                     n = await c.ReadAsync(buffer, 0, 1024);
                 }
-                
 
             }
-            
-            
-
             return n;
-            
         }
 
 
@@ -210,32 +188,26 @@ namespace TCPa
                 //Skickar ut meddelandet som är infogad i variabeln "string message" 
                 byte[] utData = Encoding.Unicode.GetBytes(message);
                 //För varje användare som finns i listan så ska meddelandet skickas till
-                
-                for(int i = 0; i < size; i++)
+
+                for (int i = 0; i < size; i++)
                 {
                     try //
                     {   //Om klienten som har valts i listan INTE är en själv/den som skickade
-                        
+
                         if (KHM.ContainsKey(i))
                         {
                             s = KHM[i].GetStream();
                             if (KHM[i] != klientSomSkickar && KHM[i].Connected)
                             {
                                 //Väntar tills den får kod och skriver 
-                                
-                                if (KHM[i].Connected) 
+
+                                if (KHM[i].Connected)
                                 {
                                     //await s.WriteAsync(utData, 0, utData.Length);
                                     await s.WriteAsync(utData, 0, utData.Length);
                                 }
-                                 
-                              
                             }
-                            
-
-                       }
-                        
-
+                        }
                     }
                     catch (Exception)
                     {
@@ -245,13 +217,13 @@ namespace TCPa
                             lblA.Text = KHM.Count.ToString();
                         }
                         continue;
-                        
+
                     }
                 }
             }
         }
 
-        
+
         //Sätts igång när servern stängs av
         private void Server_FormClosing(object sender, FormClosingEventArgs e)
         {
@@ -261,7 +233,7 @@ namespace TCPa
                 klient.Close();
             }
         }
-        
-        
+
+
     }
 }

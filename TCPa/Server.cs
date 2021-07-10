@@ -11,6 +11,7 @@ using System.Net;
 using System.Net.Sockets;
 using System.IO;
 using System.Threading;
+using System.Diagnostics;
 
 namespace TCPa
 {   // skapar en lista med tcp clients 
@@ -28,6 +29,7 @@ namespace TCPa
         TcpListener lyssnare;
         int port = 0;
         int size = 0;
+        NetworkStream s;
         public Server()
         {
             InitializeComponent();
@@ -128,7 +130,7 @@ namespace TCPa
         //Startreading metoden fångar klientvariabeln med parametern "k"
         public async Task StartReading(TcpClient k)
         {
-            await Task.Delay(1000);
+            await Task.Delay(50);
                 //Buffervariabeln sparar information som kan maximalt hantera 1024 bytes.  
                 byte[] buffer = new byte[1024];
             //variabeln "n" tilldelas värdet 0
@@ -174,7 +176,7 @@ namespace TCPa
 
 
             //Efter anropet har gjorts på startsending loopas startreading funktionen.
-            await StartReading(k);
+            StartReading(k).RunSynchronously();
             
         }
         //Metoden nedan tar emot klienten, "k", som argument med variabeln "klientSomSkickar",
@@ -205,6 +207,7 @@ namespace TCPa
 
         public async void StartSending(TcpClient klientSomSkickar, string message)
         {
+            await Task.Delay(1000);
             if (klientSomSkickar != null && KHM.Count > 0)
             {
                 //Skickar ut meddelandet som är infogad i variabeln "string message" 
@@ -213,36 +216,39 @@ namespace TCPa
                 
                 for(int i = 0; i < size; i++)
                 {
-                   
                     try //
                     {   //Om klienten som har valts i listan INTE är en själv/den som skickade
+                        
                         if (KHM.ContainsKey(i))
                         {
+                            s = KHM[i].GetStream();
                             if (KHM[i] != klientSomSkickar && KHM[i].Connected)
                             {
                                 //Väntar tills den får kod och skriver 
-                                NetworkStream s = KHM[i].GetStream();
-                                do
+                                
+                                if (KHM[i].Connected) 
                                 {
+                                    //await s.WriteAsync(utData, 0, utData.Length);
                                     await s.WriteAsync(utData, 0, utData.Length);
                                 }
-                                while (s.DataAvailable);  
+                                 
                               
                             }
-                            else if (!KHM[i].Connected)
-                            {
-                                KHM.Remove(i);
-                                lblA.Text = KHM.Count.ToString();
-                            }
+                            
 
                        }
                         
 
                     }
-                    catch (Exception error)
+                    catch (Exception)
                     {
-                        MessageBox.Show("AA"); 
-                        return;
+                        if (!KHM[i].Connected)
+                        {
+                            KHM.Remove(i);
+                            lblA.Text = KHM.Count.ToString();
+                        }
+                        continue;
+                        
                     }
                 }
             }

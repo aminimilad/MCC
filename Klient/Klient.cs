@@ -189,7 +189,8 @@ namespace Klient
                  }
                 //Stänger av klient
                 if (klient != null)
-                    klient.Close();
+                    klient.GetStream().Flush();
+                klient.Close();
             }
 
            

@@ -16,7 +16,6 @@ namespace TCPa
     {
         TcpClient klient = null;
         //Skapar listan "klientLista" med TcpClient som datatyp
-        List<TcpClient> klientLista = new List<TcpClient>();
         Dictionary<int, TcpClient> KHM = new Dictionary<int, TcpClient>();
         //Skapar en tom variabel, lyssnare, med TcpListener som datatyp
         TcpListener lyssnare;
@@ -141,6 +140,7 @@ namespace TCPa
                 if (k.Connected)
                 {
                     p = await Task.Run(() => GetVAsync(k, buffer));
+                    
                 }
 
             }
@@ -176,7 +176,6 @@ namespace TCPa
                 {
                     n = await c.ReadAsync(buffer, 0, 1024);
                 }
-
             }
             return n;
         }

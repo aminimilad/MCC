@@ -68,9 +68,10 @@ namespace Klient
                 tbxNmn.Enabled = false;
                 namn = tbxNmn.Text;
                 //Tid
-                tid = DateTime.Now.ToString("HH:mm:tt");
-
+                tid = DateTime.Now.ToString("HH:mm tt");
+                //Skicka ett paket med 2 bitar:::::
                 byte[] utData = Encoding.Unicode.GetBytes(namn + " " + "anslöt sig till rummet" + " " + tid + "\r\n");
+               
                 try
                 {
                     //Testa appenda/lägg till denna text som en utdata till andra klienter
@@ -79,7 +80,7 @@ namespace Klient
                     //Inväntar med att skicka ström. Andra delar i metoden körs ej,
                     //dock utanför metoden pågår processen, utan att datorn kraschar
                     await klient.GetStream().WriteAsync(utData, 0, utData.Length);
-
+                    
                 }
                 catch (Exception error)
                 {
@@ -100,7 +101,7 @@ namespace Klient
                 //Läs av namnet
                 namn = tbxNmn.Text;
                 //Tid
-                tid = DateTime.Now.ToString("HH:mm:tt");
+                tid = DateTime.Now.ToString("HH:mm tt");
                 //Om meddelandefältet är tomt..
                 if (String.IsNullOrEmpty(tbxMedd.Text) || String.IsNullOrWhiteSpace(tbxMedd.Text))
                 {
@@ -160,7 +161,7 @@ namespace Klient
             //Läs av namnet
             namn = tbxNmn.Text;
             //Tid
-            tid = DateTime.Now.ToString("HH:mm:tt");
+            tid = DateTime.Now.ToString("HH:mm tt");
 
             if (klient.Connected && klient != null)
             {

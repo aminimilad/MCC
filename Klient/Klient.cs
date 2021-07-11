@@ -114,7 +114,7 @@ namespace Klient
                     try
                     {
                         //Testa appenda/lägg till denna text som en utdata till andra klienter
-                        tbxLogg.AppendText("<" + " " + namn + " " + ">" + "  " + tid + ":" + "\t" + tbxMedd.Text + "\r\n");
+                        tbxLogg.AppendText("<" + " " + namn + " " + ">" + "  " + tid  + "\t" + tbxMedd.Text + "\r\n");
 
                         //Inväntar med att skicka ström. Andra delar i metoden körs ej,
                         //dock utanför metoden pågår processen, utan att datorn kraschar

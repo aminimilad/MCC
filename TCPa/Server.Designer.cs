@@ -34,7 +34,6 @@
             this.tbxLogg = new System.Windows.Forms.RichTextBox();
             this.btnTaEmot = new System.Windows.Forms.Button();
             this.lblA = new System.Windows.Forms.Label();
-            this.TbxO = new System.Windows.Forms.RichTextBox();
             this.label3 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
@@ -90,21 +89,12 @@
             // lblA
             // 
             this.lblA.AutoSize = true;
-            this.lblA.BackColor = System.Drawing.SystemColors.ActiveCaption;
-            this.lblA.Location = new System.Drawing.Point(304, 71);
+            this.lblA.BackColor = System.Drawing.SystemColors.Control;
+            this.lblA.Location = new System.Drawing.Point(72, 337);
             this.lblA.Name = "lblA";
-            this.lblA.Size = new System.Drawing.Size(0, 17);
+            this.lblA.Size = new System.Drawing.Size(12, 17);
             this.lblA.TabIndex = 5;
-            // 
-            // TbxO
-            // 
-            this.TbxO.Location = new System.Drawing.Point(21, 358);
-            this.TbxO.Margin = new System.Windows.Forms.Padding(4);
-            this.TbxO.Name = "TbxO";
-            this.TbxO.ReadOnly = true;
-            this.TbxO.Size = new System.Drawing.Size(340, 129);
-            this.TbxO.TabIndex = 3;
-            this.TbxO.Text = "";
+            this.lblA.Text = " ";
             // 
             // label3
             // 
@@ -112,9 +102,9 @@
             this.label3.Location = new System.Drawing.Point(21, 337);
             this.label3.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(49, 17);
+            this.label3.Size = new System.Drawing.Size(53, 17);
             this.label3.TabIndex = 2;
-            this.label3.Text = "Online";
+            this.label3.Text = "Online:";
             // 
             // Server
             // 
@@ -123,7 +113,6 @@
             this.ClientSize = new System.Drawing.Size(385, 500);
             this.Controls.Add(this.lblA);
             this.Controls.Add(this.btnTaEmot);
-            this.Controls.Add(this.TbxO);
             this.Controls.Add(this.tbxLogg);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.label2);
@@ -146,7 +135,6 @@
         private System.Windows.Forms.RichTextBox tbxLogg;
         private System.Windows.Forms.Button btnTaEmot;
         private System.Windows.Forms.Label lblA;
-        private System.Windows.Forms.RichTextBox TbxO;
         private System.Windows.Forms.Label label3;
     }
 }

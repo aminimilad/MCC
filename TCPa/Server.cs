@@ -104,6 +104,8 @@ namespace TCPa
                 size++;
                 //lblA.Text = klientLista.Count.ToString();
                 lblA.Text = KHM.Count.ToString();
+               
+                
             }
             //Om inte kodblocket ovan exekveras ordentligt så körs nedanstående kodblock. 
             catch (Exception error)
@@ -121,7 +123,7 @@ namespace TCPa
         //Startreading metoden fångar klientvariabeln med parametern "k"
         public async Task StartReading(TcpClient k)
         {
-            await Task.Delay(50);
+            await Task.Delay(500);
             //Buffervariabeln sparar information som kan maximalt hantera 1024 bytes.  
             byte[] buffer = new byte[1024];
             //variabeln "n" tilldelas värdet 0
@@ -156,7 +158,7 @@ namespace TCPa
             tbxLogg.AppendText(Encoding.Unicode.GetString(buffer, 0, p));
 
             //Efter anropet har gjorts på startsending loopas startreading funktionen.
-            StartReading(k).RunSynchronously();
+            StartReading(k).GetAwaiter();
 
         }
         //Metoden nedan tar emot klienten, "k", som argument med variabeln "klientSomSkickar",

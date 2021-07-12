@@ -40,6 +40,7 @@
             this.tbxNmn = new System.Windows.Forms.TextBox();
             this.btnAnslut = new System.Windows.Forms.Button();
             this.tbxLogg = new System.Windows.Forms.RichTextBox();
+            this.btn_Refresh = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // tbxIP
@@ -160,12 +161,24 @@
             this.tbxLogg.TabIndex = 11;
             this.tbxLogg.Text = "";
             // 
+            // btn_Refresh
+            // 
+            this.btn_Refresh.Font = new System.Drawing.Font("Microsoft Sans Serif", 25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btn_Refresh.Location = new System.Drawing.Point(347, 12);
+            this.btn_Refresh.Name = "btn_Refresh";
+            this.btn_Refresh.Size = new System.Drawing.Size(99, 73);
+            this.btn_Refresh.TabIndex = 12;
+            this.btn_Refresh.Text = "⟳";
+            this.btn_Refresh.UseVisualStyleBackColor = true;
+            this.btn_Refresh.Click += new System.EventHandler(this.btn_Refresh_Click);
+            // 
             // Klient
             // 
             this.AcceptButton = this.btnSend;
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(461, 548);
+            this.Controls.Add(this.btn_Refresh);
             this.Controls.Add(this.tbxLogg);
             this.Controls.Add(this.btnAnslut);
             this.Controls.Add(this.Namn);
@@ -201,6 +214,7 @@
         private System.Windows.Forms.TextBox tbxNmn;
         private System.Windows.Forms.Button btnAnslut;
         private System.Windows.Forms.RichTextBox tbxLogg;
+        private System.Windows.Forms.Button btn_Refresh;
     }
 }
 

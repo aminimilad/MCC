@@ -117,7 +117,6 @@ namespace TCPa
                 }
                 else
                 {
-                    //Same name not allowed -- FIX
                     return;
                 }
                 

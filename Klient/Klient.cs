@@ -20,8 +20,12 @@ namespace Klient
         {
             InitializeComponent();
             //Skickaknappen är avstängd för att inte orsaka fel
-            btnSend.Enabled = false;
+            btnSend.Enabled = true;
 
+        }
+        private void btn_Refresh_Click(object sender, EventArgs e)
+        {
+            
         }
         private void btnAnslut_Click(object sender, EventArgs e)
         {
@@ -64,9 +68,9 @@ namespace Klient
             if (klient.Connected)
             {
                 //Stäng av följande knappar
-                btnAnslut.Enabled = false;
+               /* btnAnslut.Enabled = false;
                 btnSend.Enabled = true;
-                tbxNmn.Enabled = false;
+                tbxNmn.Enabled = false;*/
                 namn = tbxNmn.Text;
                 //Tid
                 tid = DateTime.Now.ToString("HH:mm tt");
@@ -189,5 +193,7 @@ namespace Klient
                 klient.Close();
             }
         }
+
+        
     }
 }

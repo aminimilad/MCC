@@ -108,10 +108,20 @@ namespace TCPa
                 int x = 0;
                  x = await klient.GetStream().ReadAsync(v, 0, 1024);
                 e = Encoding.Unicode.GetString(v, 0, x);
-                KHM.Add(e, klient); 
-                size++;
-                lbxO.Items.Add(e);
-                lblA.Text = KHM.Count.ToString();
+                if (!KHM.ContainsKey(e))
+                {
+                    KHM.Add(e, klient);
+                    size++;
+                    lbxO.Items.Add(e);
+                    lblA.Text = KHM.Count.ToString();
+                }
+                else
+                {
+                    //Same name not allowed -- FIX
+                    return;
+                }
+                
+                
 
             }
             //Om inte kodblocket ovan exekveras ordentligt så körs nedanstående kodblock. 

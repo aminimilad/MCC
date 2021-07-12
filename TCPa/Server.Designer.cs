@@ -35,6 +35,7 @@
             this.btnTaEmot = new System.Windows.Forms.Button();
             this.lblA = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
+            this.lbxO = new System.Windows.Forms.ListBox();
             this.SuspendLayout();
             // 
             // tbxPort
@@ -106,11 +107,21 @@
             this.label3.TabIndex = 2;
             this.label3.Text = "Online:";
             // 
+            // lbxO
+            // 
+            this.lbxO.FormattingEnabled = true;
+            this.lbxO.ItemHeight = 16;
+            this.lbxO.Location = new System.Drawing.Point(21, 358);
+            this.lbxO.Name = "lbxO";
+            this.lbxO.Size = new System.Drawing.Size(340, 100);
+            this.lbxO.TabIndex = 6;
+            // 
             // Server
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(385, 366);
+            this.ClientSize = new System.Drawing.Size(385, 472);
+            this.Controls.Add(this.lbxO);
             this.Controls.Add(this.lblA);
             this.Controls.Add(this.btnTaEmot);
             this.Controls.Add(this.tbxLogg);
@@ -136,6 +147,7 @@
         private System.Windows.Forms.Button btnTaEmot;
         private System.Windows.Forms.Label lblA;
         private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.ListBox lbxO;
     }
 }
 

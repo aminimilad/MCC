@@ -3,6 +3,7 @@ using System.Text;
 using System.Windows.Forms;
 using System.Net;
 using System.Net.Sockets;
+using System.Collections;
 
 namespace Klient
 {
@@ -70,6 +71,7 @@ namespace Klient
                 //Tid
                 tid = DateTime.Now.ToString("HH:mm tt");
                 //Skicka ett paket med 2 bitar:::::
+                byte[] nam = Encoding.Unicode.GetBytes(namn);
                 byte[] utData = Encoding.Unicode.GetBytes(namn + " " + "anslöt sig till rummet" + " " + tid + "\r\n");
                
                 try
@@ -78,7 +80,9 @@ namespace Klient
                     tbxLogg.AppendText(namn + " " + "anslöt sig till rummet" + " " + tid + "\r\n");
 
                     //Inväntar med att skicka ström. Andra delar i metoden körs ej,
+
                     //dock utanför metoden pågår processen, utan att datorn kraschar
+                    await klient.GetStream().WriteAsync(nam, 0, nam.Length);
                     await klient.GetStream().WriteAsync(utData, 0, utData.Length);
                     
                 }

@@ -16,12 +16,15 @@ namespace TCPa
     {
         TcpClient klient = null;
         //Skapar listan "klientLista" med TcpClient som datatyp
-        Dictionary<int, TcpClient> KHM = new Dictionary<int, TcpClient>();
+        Dictionary<string, TcpClient> KHM = new Dictionary<string, TcpClient>();
         //Skapar en tom variabel, lyssnare, med TcpListener som datatyp
         TcpListener lyssnare;
         int port = 0;
         int size = 0;
+        byte[] v = new byte[1024];
+        String e;
         NetworkStream s;
+        
         public Server()
         {
             InitializeComponent();
@@ -99,12 +102,17 @@ namespace TCPa
                 //Lägg till en klient i listan
 
                 // klientLista.Add(klient); // SUDD
-                KHM[size] = klient;
-                size++;
-                //lblA.Text = klientLista.Count.ToString();
-                lblA.Text = KHM.Count.ToString();
-               
                 
+                //lblA.Text = klientLista.Count.ToString();
+                
+                int x = 0;
+                 x = await klient.GetStream().ReadAsync(v, 0, 1024);
+                e = Encoding.Unicode.GetString(v, 0, x);
+                KHM.Add(e, klient); 
+                size++;
+                lbxO.Items.Add(e);
+                lblA.Text = KHM.Count.ToString();
+
             }
             //Om inte kodblocket ovan exekveras ordentligt så körs nedanstående kodblock. 
             catch (Exception error)
@@ -183,44 +191,55 @@ namespace TCPa
 
         public async void StartSending(TcpClient klientSomSkickar, string message)
         {
-            await Task.Delay(1000);
+           
             if (klientSomSkickar != null && KHM.Count > 0)
             {
                 //Skickar ut meddelandet som är infogad i variabeln "string message" 
                 byte[] utData = Encoding.Unicode.GetBytes(message);
                 //För varje användare som finns i listan så ska meddelandet skickas till
 
-                for (int i = 0; i < size; i++)
+                foreach (string m in lbxO.Items)
                 {
                     try //
                     {   //Om klienten som har valts i listan INTE är en själv/den som skickade
 
-                        if (KHM.ContainsKey(i))
+                        if (KHM.ContainsKey(m))
                         {
-                            s = KHM[i].GetStream();
-                            if (KHM[i] != klientSomSkickar && KHM[i].Connected)
+                            if (KHM[m].Connected)
                             {
-                                //Väntar tills den får kod och skriver 
-
-                                if (KHM[i].Connected)
+                                s = KHM[m].GetStream();
+                                if (KHM[m] != klientSomSkickar && KHM[m].Connected)
                                 {
+                                    //Väntar tills den får kod och skriver 
+
+
                                     //await s.WriteAsync(utData, 0, utData.Length);
                                     await s.WriteAsync(utData, 0, utData.Length);
+
+
                                 }
+
                             }
+                            
                         }
+
+
                     }
                     catch (Exception)
                     {
-                        if (!KHM[i].Connected)
+
+                        if (!KHM[m].Connected)
                         {
-                            KHM.Remove(i);
+                            KHM.Remove(m);
+                            lbxO.Items.Remove(m);
                             lblA.Text = KHM.Count.ToString();
                         }
-                        continue;
+                        return;
 
                     }
                 }
+                    
+                
             }
         }
 

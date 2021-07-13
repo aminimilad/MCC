@@ -16,17 +16,15 @@ namespace Klient
         string namn;
         string tid;
         IPAddress adress;
+        ArrayList a = new ArrayList();
         public Klient()
         {
             InitializeComponent();
             //Skickaknappen är avstängd för att inte orsaka fel
             btnSend.Enabled = true;
-
-        }
-        private void btn_Refresh_Click(object sender, EventArgs e)
-        {
             
         }
+        
         private void btnAnslut_Click(object sender, EventArgs e)
         {
             //När anslutknappen klickas körs metoden nedan
@@ -35,6 +33,15 @@ namespace Klient
 
         private async void Connect()
         {
+            try
+            {
+
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
             //Läser in IP adressen
             try
             {
@@ -57,7 +64,12 @@ namespace Klient
             try
             {
                 //Inväntar att anslutningen görs, andra delar av koden körs under tiden. Förrebygger krasch
-                await klient.ConnectAsync(adress, port);
+            
+                    MessageBox.Show("In here");
+                    await klient.ConnectAsync(adress, port);
+               
+                
+               
             }
             catch (Exception error)
             {
@@ -67,11 +79,14 @@ namespace Klient
             //Om klienten är ansluten...
             if (klient.Connected)
             {
+                MessageBox.Show("Connecting");
+                
                 //Stäng av följande knappar
-               /* btnAnslut.Enabled = false;
+                /* btnAnslut.Enabled = false;
                 btnSend.Enabled = true;
                 tbxNmn.Enabled = false;*/
                 namn = tbxNmn.Text;
+                
                 //Tid
                 tid = DateTime.Now.ToString("HH:mm tt");
                 //Skicka ett paket med 2 bitar:::::

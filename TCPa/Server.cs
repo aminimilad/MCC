@@ -100,11 +100,14 @@ namespace TCPa
                 //samt invänta meddelande utan att behöva krascha. 
                 klient = await lyssnare.AcceptTcpClientAsync();
                 //Lägg till en klient i listan
+                
+                
+
 
                 // klientLista.Add(klient); // SUDD
-                
+
                 //lblA.Text = klientLista.Count.ToString();
-                
+
                 int x = 0;
                  x = await klient.GetStream().ReadAsync(v, 0, 1024);
                 e = Encoding.Unicode.GetString(v, 0, x);
@@ -114,9 +117,15 @@ namespace TCPa
                     size++;
                     lbxO.Items.Add(e);
                     lblA.Text = KHM.Count.ToString();
+
+                    foreach (string h in lbxO.Items)
+                    {
+                        SendUser(klient, h);
+                    }
                 }
                 else
                 {
+                    MessageBox.Show("User already exists");
                     return;
                 }
                 
@@ -169,7 +178,7 @@ namespace TCPa
             //Nedanstående anrop görs för att servern ska kunna skicka vidare sträng till de resterande 
             //Uppkopplade klienter. Startsending metoden anropas med klienten, "k", och utskriften som argument
 
-            StartSending(k, Encoding.Unicode.GetString(buffer, 0, p));
+            StartSending(k, Encoding.Unicode.GetString(buffer, 0, p), 0);
             //Samma meddelande som skickas till andra klienter genom servern (anropet ovan), skrivs även ut
             //i serverns meddelandelogg.
             tbxLogg.AppendText(Encoding.Unicode.GetString(buffer, 0, p));
@@ -198,7 +207,7 @@ namespace TCPa
         }
 
 
-        public async void StartSending(TcpClient klientSomSkickar, string message)
+        public async void StartSending(TcpClient klientSomSkickar, string message, int i)
         {
            
             if (klientSomSkickar != null && KHM.Count > 0)
@@ -220,19 +229,11 @@ namespace TCPa
                                 if (KHM[m] != klientSomSkickar && KHM[m].Connected)
                                 {
                                     //Väntar tills den får kod och skriver 
-
-
                                     //await s.WriteAsync(utData, 0, utData.Length);
                                     await s.WriteAsync(utData, 0, utData.Length);
-
-
                                 }
-
                             }
-                            
                         }
-
-
                     }
                     catch (Exception)
                     {
@@ -251,6 +252,14 @@ namespace TCPa
                 
             }
         }
+
+
+        public async void SendUser(TcpClient klientSomSkickar, string message)
+        {
+
+            
+        }
+
 
 
         //Sätts igång när servern stängs av

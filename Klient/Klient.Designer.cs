@@ -1,4 +1,6 @@
-﻿namespace Klient
+﻿using System;
+
+namespace Klient
 {
     partial class Klient
     {
@@ -41,11 +43,12 @@
             this.btnAnslut = new System.Windows.Forms.Button();
             this.tbxLogg = new System.Windows.Forms.RichTextBox();
             this.btn_Refresh = new System.Windows.Forms.Button();
+            this.lbo = new System.Windows.Forms.ListBox();
             this.SuspendLayout();
             // 
             // tbxIP
             // 
-            this.tbxIP.Location = new System.Drawing.Point(128, 12);
+            this.tbxIP.Location = new System.Drawing.Point(277, 12);
             this.tbxIP.Margin = new System.Windows.Forms.Padding(4);
             this.tbxIP.Name = "tbxIP";
             this.tbxIP.Size = new System.Drawing.Size(208, 22);
@@ -55,7 +58,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(17, 16);
+            this.label1.Location = new System.Drawing.Point(166, 16);
             this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(68, 17);
@@ -65,7 +68,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(17, 62);
+            this.label2.Location = new System.Drawing.Point(166, 62);
             this.label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(34, 17);
@@ -75,7 +78,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(17, 384);
+            this.label3.Location = new System.Drawing.Point(11, 378);
             this.label3.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(86, 17);
@@ -84,16 +87,16 @@
             // 
             // tbxMedd
             // 
-            this.tbxMedd.Location = new System.Drawing.Point(16, 404);
+            this.tbxMedd.Location = new System.Drawing.Point(14, 399);
             this.tbxMedd.Margin = new System.Windows.Forms.Padding(4);
             this.tbxMedd.Multiline = true;
             this.tbxMedd.Name = "tbxMedd";
-            this.tbxMedd.Size = new System.Drawing.Size(333, 128);
+            this.tbxMedd.Size = new System.Drawing.Size(284, 128);
             this.tbxMedd.TabIndex = 4;
             // 
             // tbxPort
             // 
-            this.tbxPort.Location = new System.Drawing.Point(128, 58);
+            this.tbxPort.Location = new System.Drawing.Point(277, 58);
             this.tbxPort.Margin = new System.Windows.Forms.Padding(4);
             this.tbxPort.Name = "tbxPort";
             this.tbxPort.Size = new System.Drawing.Size(208, 22);
@@ -102,7 +105,7 @@
             // 
             // btnSend
             // 
-            this.btnSend.Location = new System.Drawing.Point(359, 404);
+            this.btnSend.Location = new System.Drawing.Point(306, 399);
             this.btnSend.Margin = new System.Windows.Forms.Padding(4);
             this.btnSend.Name = "btnSend";
             this.btnSend.Size = new System.Drawing.Size(87, 129);
@@ -114,7 +117,7 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(17, 145);
+            this.label4.Location = new System.Drawing.Point(11, 144);
             this.label4.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(40, 17);
@@ -124,7 +127,7 @@
             // Namn
             // 
             this.Namn.AutoSize = true;
-            this.Namn.Location = new System.Drawing.Point(17, 108);
+            this.Namn.Location = new System.Drawing.Point(166, 108);
             this.Namn.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.Namn.Name = "Namn";
             this.Namn.Size = new System.Drawing.Size(45, 17);
@@ -133,7 +136,7 @@
             // 
             // tbxNmn
             // 
-            this.tbxNmn.Location = new System.Drawing.Point(128, 105);
+            this.tbxNmn.Location = new System.Drawing.Point(277, 105);
             this.tbxNmn.Margin = new System.Windows.Forms.Padding(4);
             this.tbxNmn.Name = "tbxNmn";
             this.tbxNmn.Size = new System.Drawing.Size(208, 22);
@@ -141,7 +144,7 @@
             // 
             // btnAnslut
             // 
-            this.btnAnslut.Location = new System.Drawing.Point(347, 102);
+            this.btnAnslut.Location = new System.Drawing.Point(496, 102);
             this.btnAnslut.Margin = new System.Windows.Forms.Padding(4);
             this.btnAnslut.Name = "btnAnslut";
             this.btnAnslut.Size = new System.Drawing.Size(99, 28);
@@ -152,19 +155,19 @@
             // 
             // tbxLogg
             // 
-            this.tbxLogg.Location = new System.Drawing.Point(16, 165);
+            this.tbxLogg.Location = new System.Drawing.Point(14, 165);
             this.tbxLogg.Margin = new System.Windows.Forms.Padding(4);
             this.tbxLogg.Name = "tbxLogg";
             this.tbxLogg.ReadOnly = true;
             this.tbxLogg.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.Vertical;
-            this.tbxLogg.Size = new System.Drawing.Size(428, 214);
+            this.tbxLogg.Size = new System.Drawing.Size(380, 209);
             this.tbxLogg.TabIndex = 11;
             this.tbxLogg.Text = "";
             // 
             // btn_Refresh
             // 
             this.btn_Refresh.Font = new System.Drawing.Font("Microsoft Sans Serif", 25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btn_Refresh.Location = new System.Drawing.Point(347, 12);
+            this.btn_Refresh.Location = new System.Drawing.Point(496, 12);
             this.btn_Refresh.Name = "btn_Refresh";
             this.btn_Refresh.Size = new System.Drawing.Size(99, 73);
             this.btn_Refresh.TabIndex = 12;
@@ -172,12 +175,22 @@
             this.btn_Refresh.UseVisualStyleBackColor = true;
             this.btn_Refresh.Click += new System.EventHandler(this.btn_Refresh_Click);
             // 
+            // lbo
+            // 
+            this.lbo.FormattingEnabled = true;
+            this.lbo.ItemHeight = 16;
+            this.lbo.Location = new System.Drawing.Point(401, 170);
+            this.lbo.Name = "lbo";
+            this.lbo.Size = new System.Drawing.Size(195, 356);
+            this.lbo.TabIndex = 13;
+            // 
             // Klient
             // 
             this.AcceptButton = this.btnSend;
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(461, 548);
+            this.ClientSize = new System.Drawing.Size(611, 538);
+            this.Controls.Add(this.lbo);
             this.Controls.Add(this.btn_Refresh);
             this.Controls.Add(this.tbxLogg);
             this.Controls.Add(this.btnAnslut);
@@ -200,6 +213,11 @@
 
         }
 
+        private void btn_Refresh_Click(object sender, EventArgs e)
+        {
+            throw new NotImplementedException();
+        }
+
         #endregion
 
         private System.Windows.Forms.TextBox tbxIP;
@@ -215,6 +233,7 @@
         private System.Windows.Forms.Button btnAnslut;
         private System.Windows.Forms.RichTextBox tbxLogg;
         private System.Windows.Forms.Button btn_Refresh;
+        private System.Windows.Forms.ListBox lbo;
     }
 }
 
